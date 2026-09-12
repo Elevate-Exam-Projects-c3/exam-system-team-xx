@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="../examSystemTeamXX.Application/examSystemTeamXX.Application.csproj" Id="a12550b8-8352-47fb-b72e-5f3e80a25f3d" />
+  <Project Path="../examSystemTeamXX.Domain/examSystemTeamXX.Domain.csproj" Id="82c0d40c-2289-49db-a76f-41a4f3235ef8" />
+  <Project Path="../examSystemTeamXX.Infrastructure/examSystemTeamXX.Infrastructure.csproj" Id="cc11561d-8b6c-40bf-ac31-2e64a0650552" />
   <Project Path="exam system team xx.csproj" />
 </Solution>
