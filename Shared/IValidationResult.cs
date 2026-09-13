@@ -2,7 +2,10 @@
 {
     public interface IValidationResult
     {
-        public static readonly Error ValidationError = Error.Validation("Validation", "One or more validation errors occurred.");
+        public static readonly Error ValidationError = new (
+                code: "ValidationError" , 
+                message: "One or more validation errors occurred."
+            );
 
         Error[] Errors { get; }
     }

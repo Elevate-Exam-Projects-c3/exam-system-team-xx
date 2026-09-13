@@ -8,4 +8,5 @@
         public int QuizzesCount { get; set; } = 0;
 
     }
+
 }
