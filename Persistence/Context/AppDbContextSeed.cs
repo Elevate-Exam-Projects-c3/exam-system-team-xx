@@ -27,7 +27,7 @@ public static class AppDbContextSeed
                     Role = UserRole.Admin,
                     AccountStatus = AccountStatus.Active,
                     EmailConfirmed = true,
-                    CreatedAt = DateTime.UtcNow.AddMonths(-6)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-6)
                 };
 
                 var studentUser1 = new ApplicationUser
@@ -39,7 +39,7 @@ public static class AppDbContextSeed
                     Role = UserRole.Student,
                     AccountStatus = AccountStatus.Active,
                     EmailConfirmed = true,
-                    CreatedAt = DateTime.UtcNow.AddMonths(-3)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-3)
                 };
 
                 var studentUser2 = new ApplicationUser
@@ -51,7 +51,7 @@ public static class AppDbContextSeed
                     Role = UserRole.Student,
                     AccountStatus = AccountStatus.Active,
                     EmailConfirmed = true,
-                    CreatedAt = DateTime.UtcNow.AddMonths(-2)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-2)
                 };
 
                 var studentUser3 = new ApplicationUser
@@ -63,7 +63,7 @@ public static class AppDbContextSeed
                     Role = UserRole.Student,
                     AccountStatus = AccountStatus.Pending,
                     EmailConfirmed = false,
-                    CreatedAt = DateTime.UtcNow.AddDays(-5)
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-5)
                 };
 
                 await context.Users.AddRangeAsync(adminUser, studentUser1, studentUser2, studentUser3);
@@ -74,7 +74,7 @@ public static class AppDbContextSeed
                     UserId = studentUser1.Id,
                     StudentCode = "STU-2026-0001",
                     PhoneNumber = "+1234567890",
-                    CreatedAt = DateTime.UtcNow.AddMonths(-3)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-3)
                 };
 
                 var student2 = new Student
@@ -83,7 +83,7 @@ public static class AppDbContextSeed
                     UserId = studentUser2.Id,
                     StudentCode = "STU-2026-0002",
                     PhoneNumber = "+1987654321",
-                    CreatedAt = DateTime.UtcNow.AddMonths(-2)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-2)
                 };
 
                 var student3 = new Student
@@ -92,7 +92,7 @@ public static class AppDbContextSeed
                     UserId = studentUser3.Id,
                     StudentCode = "STU-2026-0003",
                     PhoneNumber = "+1122334455",
-                    CreatedAt = DateTime.UtcNow.AddDays(-5)
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-5)
                 };
 
                 await context.Students.AddRangeAsync(student1, student2, student3);
@@ -106,7 +106,7 @@ public static class AppDbContextSeed
                     ExpiresAt = DateTime.UtcNow.AddMinutes(10),
                     AttemptCount = 0,
                     IsUsed = false,
-                    CreatedAt = DateTime.UtcNow.AddMinutes(-2)
+                    CreatedAtUtc = DateTime.UtcNow.AddMinutes(-2)
                 };
 
                 var resetOtp = new PasswordResetOtp
@@ -118,7 +118,7 @@ public static class AppDbContextSeed
                     ExpiresAt = DateTime.UtcNow.AddMinutes(8),
                     AttemptCount = 0,
                     IsUsed = false,
-                    CreatedAt = DateTime.UtcNow.AddMinutes(-2)
+                    CreatedAtUtc = DateTime.UtcNow.AddMinutes(-2)
                 };
 
                 var refreshToken = new RefreshToken
@@ -129,7 +129,7 @@ public static class AppDbContextSeed
                     ExpiresAt = DateTime.UtcNow.AddDays(7),
                     IsUsed = false,
                     IsRevoked = false,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAtUtc = DateTime.UtcNow
                 };
 
                 await context.EmailVerificationOtps.AddAsync(otp);
@@ -149,7 +149,7 @@ public static class AppDbContextSeed
                     Id = Guid.Parse("d1111111-1111-1111-1111-111111111111"),
                     Title = "Full Stack .NET & Cloud Architecture Diploma",
                     Description = "Comprehensive diploma covering C#, ASP.NET Core, EF Core, Microservices, CQRS, Docker and Azure Cloud deployment.",
-                    CreatedAt = DateTime.UtcNow.AddMonths(-4)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-4)
                 };
 
                 var diplomaFrontend = new Diploma
@@ -157,7 +157,7 @@ public static class AppDbContextSeed
                     Id = Guid.Parse("d2222222-2222-2222-2222-222222222222"),
                     Title = "Modern Frontend Development with Angular & React",
                     Description = "Master modern web user interfaces using TypeScript, Angular, React, TailwindCSS, State Management and RESTful APIs.",
-                    CreatedAt = DateTime.UtcNow.AddMonths(-3)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-3)
                 };
 
                 var diplomaDevOps = new Diploma
@@ -165,7 +165,7 @@ public static class AppDbContextSeed
                     Id = Guid.Parse("d3333333-3333-3333-3333-333333333333"),
                     Title = "DevOps & CI/CD Engineering",
                     Description = "Industry-standard practices in GitOps, GitHub Actions, Docker, Kubernetes, Terraform and Infrastructure as Code.",
-                    CreatedAt = DateTime.UtcNow.AddMonths(-1)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-1)
                 };
 
                 await context.Diplomas.AddRangeAsync(diplomaNet, diplomaFrontend, diplomaDevOps);
@@ -209,7 +209,7 @@ public static class AppDbContextSeed
                     MaxAttempts = 3,
                     Status = QuizStatus.Published,
                     PublishedAt = DateTime.UtcNow.AddMonths(-2),
-                    CreatedAt = DateTime.UtcNow.AddMonths(-2)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-2)
                 };
 
                 var quizEfCore = new Quiz
@@ -223,7 +223,7 @@ public static class AppDbContextSeed
                     MaxAttempts = 2,
                     Status = QuizStatus.Published,
                     PublishedAt = DateTime.UtcNow.AddMonths(-1),
-                    CreatedAt = DateTime.UtcNow.AddMonths(-1)
+                    CreatedAtUtc = DateTime.UtcNow.AddMonths(-1)
                 };
 
                 var quizArchitecture = new Quiz
@@ -236,7 +236,7 @@ public static class AppDbContextSeed
                     PassScore = 75,
                     MaxAttempts = null,
                     Status = QuizStatus.Draft,
-                    CreatedAt = DateTime.UtcNow.AddDays(-10)
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-10)
                 };
 
                 var quizTypeScript = new Quiz
@@ -250,7 +250,7 @@ public static class AppDbContextSeed
                     MaxAttempts = 3,
                     Status = QuizStatus.Published,
                     PublishedAt = DateTime.UtcNow.AddDays(-15),
-                    CreatedAt = DateTime.UtcNow.AddDays(-20)
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-20)
                 };
 
                 await context.Quizzes.AddRangeAsync(quizCsharp, quizEfCore, quizArchitecture, quizTypeScript);
@@ -344,7 +344,7 @@ public static class AppDbContextSeed
                     SubmittedAt = DateTime.UtcNow.AddDays(-10).AddMinutes(-5),
                     Score = 100.0,
                     Passed = true,
-                    CreatedAt = DateTime.UtcNow.AddDays(-10)
+                    CreatedAtUtc = DateTime.UtcNow.AddDays(-10)
                 };
 
                 var answer1A = new StudentQuestionAnswer
@@ -394,7 +394,7 @@ public static class AppDbContextSeed
                     Deadline = DateTime.UtcNow.AddMinutes(20),
                     Score = null,
                     Passed = null,
-                    CreatedAt = DateTime.UtcNow.AddMinutes(-10)
+                    CreatedAtUtc = DateTime.UtcNow.AddMinutes(-10)
                 };
 
                 var answer2A = new StudentQuestionAnswer
