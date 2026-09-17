@@ -9,7 +9,7 @@ public interface ISpecification <TEntity,TKey>
     where TEntity : BaseEntity<TKey>
 {
     IReadOnlyList<Expression<Func<TEntity, bool>>> WhereExpressions { get; }
-    IReadOnlyList<Expression<Func<TEntity, object>>> Includes{ get; }
+    IReadOnlyList<Expression<Func<TEntity, object>>> IncludesExpressions { get; }
     IReadOnlyList<ThenIncludeExpressionInfo> ThenIncludeExpressions{ get; }
     IReadOnlyList<OrderExpressionInfo<TEntity>> OrderExpressions{ get; }
     int Take { get; }

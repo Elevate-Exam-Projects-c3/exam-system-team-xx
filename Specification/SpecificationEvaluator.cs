@@ -13,12 +13,12 @@ internal static class SpecificationEvaluator
     {
         if (specification.WhereExpressions.Count > 0)
         {
-            query = ApplyPredictes<TEntity, TKey>(query, specification.WhereExpressions);
+            query = ApplyPredicates<TEntity, TKey>(query, specification.WhereExpressions);
         }
 
-        if (specification.Includes.Count > 0)
+        if (specification.IncludesExpressions.Count > 0)
         {
-            query = ApplyIncludes<TEntity, TKey>(query, specification.Includes, specification.ThenIncludeExpressions);
+            query = ApplyIncludes<TEntity, TKey>(query, specification.IncludesExpressions, specification.ThenIncludeExpressions);
         }
 
         if (specification.OrderExpressions.Count > 0)
@@ -44,7 +44,7 @@ internal static class SpecificationEvaluator
             query.SelectMany(specification.SelectManyExpression!);
     }
 
-    private static IQueryable<TEntity> ApplyPredictes<TEntity, TKey>(IQueryable<TEntity> query, IReadOnlyList<Expression<Func<TEntity, bool>>> whereExpressions)
+    private static IQueryable<TEntity> ApplyPredicates<TEntity, TKey>(IQueryable<TEntity> query, IReadOnlyList<Expression<Func<TEntity, bool>>> whereExpressions)
         where TEntity : BaseEntity<TKey>
     {
         foreach (var whereExpression in whereExpressions) 

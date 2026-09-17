@@ -10,7 +10,7 @@ public abstract class Specification<TEntity, TKey> : ISpecification<TEntity, TKe
 {
     /* Fields */
     private List<Expression<Func<TEntity, bool>>> _whereExpressions = [];
-    private List<Expression<Func<TEntity, object>>> _includes = [];
+    private List<Expression<Func<TEntity, object>>> _includesExpressions = [];
     private List<ThenIncludeExpressionInfo> _thenIncludeExpressions = [];
     private List<OrderExpressionInfo<TEntity>> _orderExpressions = [];
 
@@ -18,8 +18,8 @@ public abstract class Specification<TEntity, TKey> : ISpecification<TEntity, TKe
     protected ISpecificationBuilder<TEntity,TKey> Query => new SpecificationBuilder<TEntity,TKey>(this); // builder
     public IReadOnlyList<Expression<Func<TEntity, bool>>> WhereExpressions 
         => _whereExpressions;
-    public IReadOnlyList<Expression<Func<TEntity, object>>> Includes 
-        => _includes;
+    public IReadOnlyList<Expression<Func<TEntity, object>>> IncludesExpressions 
+        => _includesExpressions;
     public IReadOnlyList<ThenIncludeExpressionInfo> ThenIncludeExpressions 
         => _thenIncludeExpressions;
     public IReadOnlyList<OrderExpressionInfo<TEntity>> OrderExpressions 
@@ -38,11 +38,11 @@ public abstract class Specification<TEntity, TKey> : ISpecification<TEntity, TKe
             includeExpression.Body,
             includeExpression.Parameters);
 
-        _includes.Add(newIncludeExpression); 
+        _includesExpressions.Add(newIncludeExpression); 
     }
 
-    internal void AddThenInclude<TProperty>(LambdaExpression navigtion, LambdaExpression parentExpression)
-        => _thenIncludeExpressions.Add(new(navigtion,parentExpression));
+    internal void AddThenInclude<TProperty>(LambdaExpression navigation, LambdaExpression parentExpression)
+        => _thenIncludeExpressions.Add(new(navigation,parentExpression));
 
     internal void AddOrder(Expression<Func<TEntity,object?>> keySelector, OrderType orderType)
         => _orderExpressions.Add(new(keySelector,orderType));
