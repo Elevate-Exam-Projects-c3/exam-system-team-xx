@@ -5,7 +5,7 @@ using exam_system.Domain.Entities.Quizzes;
 
 namespace exam_system.Domain.Entities.Attempts;
 
-public class QuizAttempt : BaseEntity
+public class QuizAttempt : BaseEntity<Guid>
 {
     public Guid StudentId { get; set; }
     public Student Student { get; set; } = null!;

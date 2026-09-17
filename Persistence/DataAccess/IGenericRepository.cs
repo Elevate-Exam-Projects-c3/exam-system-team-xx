@@ -1,20 +1,24 @@
-using System.Linq.Expressions;
-using exam_system.Domain.Common;
+﻿using exam_system.Domain.Common;
+using exam_system.Specification;
 
 namespace exam_system.Persistence.DataAccess;
 
-public interface IGenericRepository<T> where T : BaseEntity
+public interface IGenericRepository<TEntity,TKey> where TEntity : BaseEntity<TKey>
 {
-    Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes);
-    IQueryable<T> GetAll();
-    IQueryable<T> Get(Expression<Func<T, bool>> predicate);
-    Task AddAsync(T entity);
-    Task AddRangeAsync(IEnumerable<T> entities);
-    void Update(T entity);
-    Task UpdateAsync(T entity);
-    void Delete(T entity);
-    Task DeleteAsync(T entity);
-    void HardDelete(T entity);
-    void DeleteRange(IEnumerable<T> entities);
-    Task<int> CountAsync(Expression<Func<T, bool>>? criteria = null);
+    Task<IReadOnlyList<TEntity>> GetAllAsync(bool trackingEnabled = true, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity,TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default);
+
+    ValueTask<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
+    Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default);
+    Task<TResult?> FirstOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default);
+    Task<TEntity?> SingleOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default);
+    Task<TResult?> SingleOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default);
+    
+    void Add(TEntity entity);
+    void Update(TEntity entity);
+    void Delete(TEntity entity);
 }

@@ -3,7 +3,7 @@ using exam_system.Domain.Entities.Quizzes;
 
 namespace exam_system.Domain.Entities.Diplomas;
 
-public class Diploma : BaseEntity
+public class Diploma : BaseEntity<Guid>
 {
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }

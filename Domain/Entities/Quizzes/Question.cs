@@ -3,7 +3,7 @@ using exam_system.Domain.Entities.Attempts;
 
 namespace exam_system.Domain.Entities.Quizzes;
 
-public class Question : BaseEntity
+public class Question : BaseEntity<Guid>
 {
     public Guid QuizId { get; set; }
     public Quiz Quiz { get; set; } = null!;
