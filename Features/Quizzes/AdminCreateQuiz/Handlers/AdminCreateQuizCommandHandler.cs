@@ -21,8 +21,8 @@ public class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizComm
         var newQuiz = new Quiz()
         {
             DiplomaId = request.AdminCreateQuizRequest.DiplomaId,
-            Title = request.AdminCreateQuizRequest.Title,
-            Instructions = request.AdminCreateQuizRequest.Instructions,
+            Title = request.AdminCreateQuizRequest.Title.Trim(),
+            Instructions = request.AdminCreateQuizRequest.Instructions?.Trim(),
             DurationMinutes = request.AdminCreateQuizRequest.DurationMinutes,
             PassScore = request.AdminCreateQuizRequest.PassScore,
             MaxAttempts = request.AdminCreateQuizRequest.MaxAttempts,
