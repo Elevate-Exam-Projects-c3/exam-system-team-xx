@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
+using MediatR;
+using exam_system.Shared.Behavior;
 
 namespace exam_system.Persistence;
 
@@ -14,8 +16,10 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
 
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+
 
         return services;
     }

@@ -1,104 +1,70 @@
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using exam_system.Domain.Common;
+﻿using exam_system.Domain.Common;
 using exam_system.Persistence.Context;
+using exam_system.Specification;
+using Microsoft.EntityFrameworkCore;
 
 namespace exam_system.Persistence.DataAccess;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+internal sealed class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> 
+    where TEntity : BaseEntity<TKey>
 {
-    protected readonly AppDbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    /* Fields */
+    private readonly AppDbContext _storeDbContext;
+    private readonly DbSet<TEntity> _entityDbSet;
 
-    public GenericRepository(AppDbContext context)
+    /* Constructors */
+    public GenericRepository(AppDbContext storeDbContext)
     {
-        _context = context;
-        _dbSet = _context.Set<T>();
+        _storeDbContext = storeDbContext;
+        _entityDbSet = _storeDbContext.Set<TEntity>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
-    {
-        IQueryable<T> query = _dbSet;
+    /* Methods */
+    public async Task<IReadOnlyList<TEntity>> GetAllAsync(bool trackingEnabled = true, CancellationToken cancellationToken = default)
+        => trackingEnabled ?
+        await _entityDbSet.ToListAsync(cancellationToken) :
+        await _entityDbSet.AsNoTracking().ToListAsync(cancellationToken);
 
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
+    public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
+        => trackingEnabled ?
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).ToListAsync(cancellationToken) :
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().ToListAsync(cancellationToken);
 
-        return await query.FirstOrDefaultAsync(e => e.Id == id);
-    }
+    public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
+        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).ToListAsync(cancellationToken);
 
-    public IQueryable<T> GetAll()
-    {
-        return _dbSet;
-    }
+    public async ValueTask<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+        => await _entityDbSet.FindAsync(id, cancellationToken);
 
-    public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
-    {
-        return _dbSet.Where(predicate);
-    }
+    public async Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
+        => trackingEnabled ?
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).FirstOrDefaultAsync(cancellationToken) :
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
 
-    public async Task AddAsync(T entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
+    public async Task<TResult?> FirstOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
+        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).FirstOrDefaultAsync(cancellationToken);
 
-    public async Task AddRangeAsync(IEnumerable<T> entities)
-    {
-        await _dbSet.AddRangeAsync(entities);
-    }
+    public async Task<TEntity?> SingleOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
+        => trackingEnabled ?
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).SingleOrDefaultAsync(cancellationToken) :
+        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().SingleOrDefaultAsync(cancellationToken);
 
-    public void Update(T entity)
-    {
-        _dbSet.Update(entity);
-    }
+    public async Task<TResult?> SingleOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
+        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).SingleOrDefaultAsync(cancellationToken);
 
- 
-    // Soft Delete - marks as deleted but keeps in database
-    public void Delete(T entity)
-    {
-        _dbSet.Attach(entity);
-        entity.IsDeleted = true;
-        entity.DeletedAt = DateTime.UtcNow;
+    public async Task<bool> AnyAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default)
+        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AnyAsync(cancellationToken);
 
-        // Mark the entity as modified so EF will update it
-        _context.Entry(entity).State = EntityState.Modified;
-    }
+    public async Task<int> CountAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default)
+        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).CountAsync(cancellationToken);
 
-    // Hard Delete - physically removes from database
-    public void HardDelete(T entity)
-    {
-        _dbSet.Remove(entity);
-    }
+    public void Add(TEntity entity)
+        => _entityDbSet.Add(entity);
 
-    public void DeleteRange(IEnumerable<T> entities)
-    {
-        foreach (var entity in entities)
-        {
-            Delete(entity); // Use soft delete for range as well
-        }
-    }
+    public void Update(TEntity entity)
+        => _entityDbSet.Update(entity);
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>>? criteria = null)
-    {
-        if (criteria == null)
-        {
-            return await _dbSet.CountAsync();
-        }
+    public void Delete(TEntity entity)
+       => _entityDbSet.Remove(entity);
 
-        return await _dbSet.CountAsync(criteria);
-    }
-
-    public Task UpdateAsync(T entity)
-    {
-        _context.Entry(entity).State = EntityState.Modified;
-        return Task.CompletedTask;
-    }
-
-    public Task DeleteAsync(T entity)
-    {
-        Delete(entity); // Use soft delete
-        return Task.CompletedTask;
-    }
 }

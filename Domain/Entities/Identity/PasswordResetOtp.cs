@@ -2,7 +2,7 @@ using exam_system.Domain.Common;
 
 namespace exam_system.Domain.Entities.Identity;
 
-public class PasswordResetOtp : BaseEntity
+public class PasswordResetOtp : BaseEntity<Guid>
 {
     public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
