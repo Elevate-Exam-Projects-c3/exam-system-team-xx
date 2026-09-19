@@ -3,7 +3,7 @@ using exam_system.Domain.Common;
 
 namespace exam_system.Domain.Entities.Identity;
 
-public class ApplicationUser : BaseEntity<Guid>
+public class ApplicationUser : BaseEntity
 {
     public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

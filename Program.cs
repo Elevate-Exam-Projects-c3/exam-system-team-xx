@@ -1,12 +1,10 @@
 using System.Reflection;
 using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using exam_system.Domain.Entities.Diplomas;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
-using exam_system.Shared.Behavior;
+using exam_system;
 
 var builder = WebApplication.CreateBuilder(args);
 

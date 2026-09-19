@@ -1,8 +1,8 @@
 namespace exam_system.Domain.Common;
 
-public abstract class BaseEntity<TKey> 
+public abstract class BaseEntity
 {
-    public TKey Id { get; set; } = default!;
+    public Guid Id { get; set; } = default!;
     public DateTime CreatedAtUtc { get; set; } 
     public DateTime? UpdatedAtUtc { get; set; }
     public bool IsDeleted { get; set; } = false;

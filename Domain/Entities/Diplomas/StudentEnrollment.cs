@@ -3,7 +3,7 @@ using exam_system.Domain.Entities.Identity;
 
 namespace exam_system.Domain.Entities.Diplomas;
 
-public class StudentEnrollment : BaseEntity<Guid>
+public class StudentEnrollment : BaseEntity
 {
     public Guid StudentId { get; set; }
     public Student Student { get; set; } = null!;
