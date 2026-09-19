@@ -132,8 +132,8 @@ public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
 {
     public void Configure(EntityTypeBuilder<Quiz> builder)
     {
-        builder.ToTable("Quizzes", t => t.HasCheckConstraint("CK_PassScore_0_100", "[PassScore] BETWEEN 0 AND 100")); builder.HasKey(q => q.Id);
-        builder.ToTable("Quizzes", t => t.HasCheckConstraint("CK_Title_3_200", "LEN([Title]) BETWEEN 3 AND 200")); builder.HasKey(q => q.Id);
+        builder.ToTable("Quizzes");
+        builder.HasKey(q => q.Id);
 
         builder.Property(q => q.Title).HasMaxLength(200).IsRequired();
         builder.Property(q => q.Instructions).HasMaxLength(2000);

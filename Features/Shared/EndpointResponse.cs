@@ -1,5 +1,3 @@
-using exam_system.Shared;
-
 namespace exam_system.Features.Shared;
 
 public class EndpointResponse<T> : ApiResponse<T>
@@ -19,22 +17,6 @@ public class EndpointResponse<T> : ApiResponse<T>
             result.Message,
             result.Data,
             result.Errors
-        );
-    }
-
-    public static EndpointResponse<T> FromResult(Result<T> result, string successMessage = "Success", int successStatusCode = 200, int failureStatusCode = 400)
-    {
-        return new EndpointResponse<T>(
-            result.IsSuccess,
-            result.IsSuccess ? successStatusCode : failureStatusCode,
-            result.IsSuccess ? successMessage : result.Error.Message,
-            result.IsSuccess ? result.Value : default,
-            result.IsSuccess
-                ? null
-                : new Dictionary<string, string[]>
-                {
-                    { result.Error.Code ?? "Error", new[] { result.Error.Message } }
-                }
         );
     }
 }

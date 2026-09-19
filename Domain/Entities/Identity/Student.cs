@@ -4,7 +4,7 @@ using exam_system.Domain.Entities.Attempts;
 
 namespace exam_system.Domain.Entities.Identity;
 
-public class Student : BaseEntity 
+public class Student : BaseEntity
 {
     public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;

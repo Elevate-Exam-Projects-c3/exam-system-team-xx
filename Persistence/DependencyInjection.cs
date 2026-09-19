@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
-using MediatR;
-using exam_system.Features.Shared.Behaviors;
 
 namespace exam_system.Persistence;
 
@@ -18,8 +16,6 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-
 
         return services;
     }
