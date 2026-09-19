@@ -7,14 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Controllers;
 
 [Route("api/admin/quizzes")]
-[ApiController]
-public class AdminCreateQuizController : ControllerBase
+public class AdminCreateQuizController : BaseController
 {
-    private readonly IMediator _mediator;
-
-    public AdminCreateQuizController(IMediator mediator)
+    public AdminCreateQuizController(IMediator mediator):base(mediator)
     {
-        _mediator = mediator;
     }
 
     [HttpPost]
@@ -26,8 +22,8 @@ public class AdminCreateQuizController : ControllerBase
         var result = await _mediator.Send(new AdminCreateQuizOrchestrator(request));
 
         if (result.IsFailure)
-            return ApiResponse.Fail(result.Error.Message, StatusCodes.Status500InternalServerError, new Dictionary<string, string[]>() { [result.Error.Code] = [result.Error.Message] });
+            return FromResult(result);
 
-        return ApiResponse.Ok(message: "Quiz is created successfully !", statusCode: StatusCodes.Status201Created);
+        return FromResult(result, successMessage: "Quiz is created successfully !", successCode: StatusCodes.Status201Created);
     }
 }
