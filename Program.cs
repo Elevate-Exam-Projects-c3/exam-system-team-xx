@@ -55,20 +55,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 // Test Minimal API Endpoint to verify database access and generic repository
-app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma,Guid> diplomaRepo, CancellationToken ct) =>
-{
-    var allDiplomasSpecification = new AllDiplomasSpecification();
-    var diplomas = await diplomaRepo.ListAsync(allDiplomasSpecification,ct);
+//app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma,Guid> diplomaRepo, CancellationToken ct) =>
+//{
+//    var allDiplomasSpecification = new AllDiplomasSpecification();
+//    var diplomas = await diplomaRepo.ListAsync(allDiplomasSpecification,ct);
 
-    return Results.Ok(new
-    {
-        Success = true,
-        diplomas.Count,
-        Data = diplomas
-    });
-})
-.WithName("GetTestDiplomas")
-.WithTags("Test");
+//    return Results.Ok(new
+//    {
+//        Success = true,
+//        diplomas.Count,
+//        Data = diplomas
+//    });
+//})
+//.WithName("GetTestDiplomas")
+//.WithTags("Test");
 
 app.MapControllers();
 
