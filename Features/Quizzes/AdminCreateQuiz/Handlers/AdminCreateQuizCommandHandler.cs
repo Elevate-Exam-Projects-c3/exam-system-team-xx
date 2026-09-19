@@ -6,7 +6,7 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 
-public class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizCommand, Result>
+public sealed class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizCommand, Result>
 {
     private readonly IGenericRepository<Quiz> _quizRepo;
 

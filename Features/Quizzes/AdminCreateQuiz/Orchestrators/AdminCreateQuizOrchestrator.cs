@@ -4,4 +4,4 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
 
-public record AdminCreateQuizOrchestrator(AdminCreateQuizRequest AdminCreateQuizRequest) : IRequest<Result>;
+public sealed record AdminCreateQuizOrchestrator(AdminCreateQuizRequest AdminCreateQuizRequest) : IRequest<Result>;

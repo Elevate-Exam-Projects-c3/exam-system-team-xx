@@ -1,6 +1,6 @@
 ﻿namespace exam_system.Features.Quizzes.AdminCreateQuiz.Requests;
 
-public class AdminCreateQuizRequest
+public sealed class AdminCreateQuizRequest
 {
     public Guid DiplomaId { get; set; } 
     public string Title { get; set; } = string.Empty;

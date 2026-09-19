@@ -6,7 +6,7 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 
-public class AdminCreateQuizOrchestratorHandler : IRequestHandler<AdminCreateQuizOrchestrator, Result>
+public sealed class AdminCreateQuizOrchestratorHandler : IRequestHandler<AdminCreateQuizOrchestrator, Result>
 {
     private readonly IMediator _mediator;
     private readonly IUnitOfWork _unitOfWork;

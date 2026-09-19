@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Controllers;
 
 [Route("api/admin/quizzes")]
-public class AdminCreateQuizController : BaseController
+public sealed class AdminCreateQuizController : BaseController
 {
     public AdminCreateQuizController(IMediator mediator):base(mediator)
     {
