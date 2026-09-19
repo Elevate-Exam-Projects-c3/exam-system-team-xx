@@ -1,41 +1,46 @@
+﻿using System.Text.Json.Serialization;
+
 namespace exam_system.Features.Shared;
 
-public class ApiResponse<T>
+public class ApiResponse
 {
-    public bool Success { get; set; }
-    public int StatusCode { get; set; }
-    public string Message { get; set; } = string.Empty;
-    public T? Data { get; set; }
-    public IDictionary<string, string[]>? Errors { get; set; }
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    [JsonPropertyOrder(0)]
+    public bool Success { get; protected set; }
+    [JsonPropertyOrder(1)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Message { get; protected set; } = string.Empty;
+    [JsonPropertyOrder(3)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ApiMeta? Meta { get; protected set; }
 
-    public ApiResponse() { }
-
-    public ApiResponse(bool success, int statusCode, string message, T? data = default, IDictionary<string, string[]>? errors = null)
-    {
-        Success = success;
-        StatusCode = statusCode;
-        Message = message;
-        Data = data;
-        Errors = errors;
-        Timestamp = DateTime.UtcNow;
-    }
-
-    public static ApiResponse<T> Ok(T data, string message = "Success", int statusCode = 200)
-        => new(true, statusCode, message, data);
-
-    public static ApiResponse<T> Created(T data, string message = "Created successfully")
-        => new(true, 201, message, data);
-
-    public static ApiResponse<T> Fail(string message, int statusCode = 400, IDictionary<string, string[]>? errors = null)
-        => new(false, statusCode, message, default, errors);
+    public static ApiResponse Ok(string? message, string traceId)
+        => new()
+        {
+            Success = true,
+            Message = message,
+            Meta = new()
+            {
+                TraceId = traceId,
+            }
+        };
 }
 
-public class ApiResponse : ApiResponse<object>
+public sealed class ApiResponse<TData> : ApiResponse
 {
-    public static ApiResponse Ok(string message = "Success", int statusCode = 200)
-        => new() { Success = true, StatusCode = statusCode, Message = message };
+    [JsonPropertyOrder(2)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public TData? Data { get; private set; } 
 
-    public static new ApiResponse Fail(string message, int statusCode = 400, IDictionary<string, string[]>? errors = null)
-        => new() { Success = false, StatusCode = statusCode, Message = message, Errors = errors };
+    public static ApiResponse<TData> Ok(TData data, string? message, string traceId, PaginationMeta? paginationMeta = null)
+        => new()
+        {
+            Success = true,
+            Data = data,
+            Message = message,
+            Meta = new()
+            {
+                TraceId = traceId,
+                Pagination = paginationMeta
+            }
+        };
 }
