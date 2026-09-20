@@ -5,6 +5,7 @@ using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
 using exam_system;
+using exam_system.Features.Shared.Behaviors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+    cfg.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+    cfg.AddOpenBehavior(typeof(TransactionPipelineBehavior<,>));
 });
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);

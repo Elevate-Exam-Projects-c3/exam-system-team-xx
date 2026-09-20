@@ -1,21 +1,23 @@
 ﻿using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
+using exam_system.Features.Shared.ResultPattern;
 using exam_system.Persistence.DataAccess;
-using exam_system.Shared;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 
-public class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizCommand, Result<Unit>>
+public sealed class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizCommand, Result>
 {
-    private readonly IGenericRepository<Quiz, Guid> _quizRepo;
+    private readonly IGenericRepository<Quiz> _quizRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AdminCreateQuizCommandHandler(IGenericRepository<Quiz, Guid> quizRepo)
+    public AdminCreateQuizCommandHandler(IGenericRepository<Quiz> quizRepo, IUnitOfWork unitOfWork)
     {
         _quizRepo = quizRepo;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Unit>> Handle(AdminCreateQuizCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AdminCreateQuizCommand request, CancellationToken cancellationToken)
     {
         // Add new quiz under a specific diploma
         var newQuiz = new Quiz()
@@ -29,6 +31,9 @@ public class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizComm
         };
         _quizRepo.Add(newQuiz);
 
-        return Result.Success(Unit.Value);
+        // Save changes to DB
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 }

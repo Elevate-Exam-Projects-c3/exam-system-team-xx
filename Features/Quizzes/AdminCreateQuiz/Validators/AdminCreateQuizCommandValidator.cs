@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Validators;
 
-public sealed class AdminCreateQuizValidator : AbstractValidator<AdminCreateQuizCommand>
+public sealed class AdminCreateQuizCommandValidator : AbstractValidator<AdminCreateQuizCommand>
 {
-    public AdminCreateQuizValidator()
+    public AdminCreateQuizCommandValidator()
     {
         RuleFor(x => x.AdminCreateQuizRequest.Title)
             .NotNull().WithMessage("Quiz must have a title.")
