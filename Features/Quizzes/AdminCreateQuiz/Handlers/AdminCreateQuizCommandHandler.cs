@@ -9,10 +9,12 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 public sealed class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQuizCommand, Result>
 {
     private readonly IGenericRepository<Quiz> _quizRepo;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AdminCreateQuizCommandHandler(IGenericRepository<Quiz> quizRepo)
+    public AdminCreateQuizCommandHandler(IGenericRepository<Quiz> quizRepo, IUnitOfWork unitOfWork)
     {
         _quizRepo = quizRepo;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> Handle(AdminCreateQuizCommand request, CancellationToken cancellationToken)
@@ -28,6 +30,9 @@ public sealed class AdminCreateQuizCommandHandler : IRequestHandler<AdminCreateQ
             MaxAttempts = request.AdminCreateQuizRequest.MaxAttempts,
         };
         _quizRepo.Add(newQuiz);
+
+        // Save changes to DB
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
