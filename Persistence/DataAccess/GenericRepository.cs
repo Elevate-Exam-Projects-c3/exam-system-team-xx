@@ -1,70 +1,51 @@
-﻿using exam_system.Domain.Common;
-using exam_system.Persistence.Context;
-using exam_system.Specification;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using exam_system.Domain.Common;
+using exam_system.Persistence.Context;
 
 namespace exam_system.Persistence.DataAccess;
 
-internal sealed class GenericRepository<TEntity, TKey> : IGenericRepository<TEntity, TKey> 
-    where TEntity : BaseEntity<TKey>
+public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
 {
-    /* Fields */
-    private readonly AppDbContext _storeDbContext;
-    private readonly DbSet<TEntity> _entityDbSet;
+    protected readonly AppDbContext _context;
+    protected readonly DbSet<TEntity> _dbSet;
 
-    /* Constructors */
-    public GenericRepository(AppDbContext storeDbContext)
+    public GenericRepository(AppDbContext context)
     {
-        _storeDbContext = storeDbContext;
-        _entityDbSet = _storeDbContext.Set<TEntity>();
+        _context = context;
+        _dbSet = _context.Set<TEntity>();
     }
 
-    /* Methods */
-    public async Task<IReadOnlyList<TEntity>> GetAllAsync(bool trackingEnabled = true, CancellationToken cancellationToken = default)
-        => trackingEnabled ?
-        await _entityDbSet.ToListAsync(cancellationToken) :
-        await _entityDbSet.AsNoTracking().ToListAsync(cancellationToken);
+    public async Task<TEntity?> GetByIdAsync(Guid id)
+        => await _dbSet.FindAsync(id);
 
-    public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
-        => trackingEnabled ?
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).ToListAsync(cancellationToken) :
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().ToListAsync(cancellationToken);
+    public IQueryable<TEntity> GetAll() 
+        => _dbSet;
 
-    public async Task<IReadOnlyList<TResult>> ListAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
-        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).ToListAsync(cancellationToken);
-
-    public async ValueTask<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
-        => await _entityDbSet.FindAsync(id, cancellationToken);
-
-    public async Task<TEntity?> FirstOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
-        => trackingEnabled ?
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).FirstOrDefaultAsync(cancellationToken) :
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
-
-    public async Task<TResult?> FirstOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
-        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).FirstOrDefaultAsync(cancellationToken);
-
-    public async Task<TEntity?> SingleOrDefaultAsync(ISpecification<TEntity, TKey> specification, bool trackingEnabled = true, CancellationToken cancellationToken = default)
-        => trackingEnabled ?
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).SingleOrDefaultAsync(cancellationToken) :
-        await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AsNoTracking().SingleOrDefaultAsync(cancellationToken);
-
-    public async Task<TResult?> SingleOrDefaultAsync<TResult>(ISpecification<TEntity, TKey, TResult> specification, CancellationToken cancellationToken = default)
-        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).SingleOrDefaultAsync(cancellationToken);
-
-    public async Task<bool> AnyAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default)
-        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).AnyAsync(cancellationToken);
-
-    public async Task<int> CountAsync(ISpecification<TEntity, TKey> specification, CancellationToken cancellationToken = default)
-        => await SpecificationEvaluator.GetQuery(_entityDbSet, specification).CountAsync(cancellationToken);
+    public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate) 
+        => _dbSet.Where(predicate);
 
     public void Add(TEntity entity)
-        => _entityDbSet.Add(entity);
+        => _dbSet.Add(entity);
 
-    public void Update(TEntity entity)
-        => _entityDbSet.Update(entity);
+    public void AddRange(IEnumerable<TEntity> entities) 
+        => _dbSet.AddRange(entities);
 
-    public void Delete(TEntity entity)
-       => _entityDbSet.Remove(entity);
+    public void Update(TEntity entity) 
+        => _dbSet.Update(entity);
 
+    public void Delete(TEntity entity) 
+        => _dbSet.Remove(entity);
+
+    public void DeleteRange(IEnumerable<TEntity> entities) 
+        => _dbSet.RemoveRange(entities);
+
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.CountAsync(criteria) : await _dbSet.CountAsync();
+
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.FirstOrDefaultAsync(criteria) : await _dbSet.FirstOrDefaultAsync();
+
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.AnyAsync(criteria) : await _dbSet.AnyAsync();
 }

@@ -1,12 +1,10 @@
 using System.Reflection;
 using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using exam_system.Domain.Entities.Diplomas;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
-using exam_system.Shared.Behavior;
+using exam_system;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,20 +55,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 // Test Minimal API Endpoint to verify database access and generic repository
-app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma,Guid> diplomaRepo, CancellationToken ct) =>
-{
-    var allDiplomasSpecification = new AllDiplomasSpecification();
-    var diplomas = await diplomaRepo.ListAsync(allDiplomasSpecification,ct);
+//app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma,Guid> diplomaRepo, CancellationToken ct) =>
+//{
+//    var allDiplomasSpecification = new AllDiplomasSpecification();
+//    var diplomas = await diplomaRepo.ListAsync(allDiplomasSpecification,ct);
 
-    return Results.Ok(new
-    {
-        Success = true,
-        diplomas.Count,
-        Data = diplomas
-    });
-})
-.WithName("GetTestDiplomas")
-.WithTags("Test");
+//    return Results.Ok(new
+//    {
+//        Success = true,
+//        diplomas.Count,
+//        Data = diplomas
+//    });
+//})
+//.WithName("GetTestDiplomas")
+//.WithTags("Test");
 
 app.MapControllers();
 

@@ -1,10 +1,11 @@
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using exam_system.Domain.Entities.Identity;
-using exam_system.Domain.Entities.Diplomas;
-using exam_system.Domain.Entities.Quizzes;
-using exam_system.Domain.Entities.Attempts;
 using exam_system.Domain.Common;
+using exam_system.Domain.Entities.Attempts;
+using exam_system.Domain.Entities.Diplomas;
+using exam_system.Domain.Entities.Identity;
+using exam_system.Domain.Entities.Quizzes;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.Reflection;
 
 namespace exam_system.Persistence.Context;
 
@@ -37,15 +38,15 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
         // Global Query Filter for Soft Delete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (typeof(BaseEntity<>).IsAssignableFrom(entityType.ClrType))
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
             {
                 var parameter = System.Linq.Expressions.Expression.Parameter(entityType.ClrType, "e");
-                var property = System.Linq.Expressions.Expression.Property(parameter, nameof(BaseEntity<>.IsDeleted));
+                var property = System.Linq.Expressions.Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
                 var falseConstant = System.Linq.Expressions.Expression.Constant(false);
                 var lambda = System.Linq.Expressions.Expression.Lambda(
                     System.Linq.Expressions.Expression.Equal(property, falseConstant),
@@ -53,14 +54,25 @@ public class AppDbContext : DbContext
                 );
 
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+
+                // Set default value sql for Id property on current entity type to NEWSEQUENTIALID() in case Id of BaseEntiy is of type Guid
+                modelBuilder.Entity(entityType.ClrType).Property(nameof(BaseEntity.Id))!
+                    .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                // Rename the equivalent columns of properties CreatedAtUtc, UpdatedAtUtc and DeletedAtUtc to CreatedAt, UpdatedAt and DeletedAt respectively on current entity
+                modelBuilder.Entity(entityType.ClrType).Property(nameof(BaseEntity.CreatedAtUtc))!
+                    .HasColumnName("CreatedAt");
+                modelBuilder.Entity(entityType.ClrType).Property(nameof(BaseEntity.UpdatedAtUtc))!
+                    .HasColumnName("UpdatedAt");
+                modelBuilder.Entity(entityType.ClrType).Property(nameof(BaseEntity.DeletedAtUtc))!
+                    .HasColumnName("DeletedAt");
             }
         }
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        base.SaveChangesAsync();
-        foreach (var entry in ChangeTracker.Entries<BaseEntity<Guid>>())
+        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
         {
             switch (entry.State)
             {
