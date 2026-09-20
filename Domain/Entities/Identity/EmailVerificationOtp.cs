@@ -3,7 +3,7 @@ using exam_system.Domain.Common;
 namespace exam_system.Domain.Entities.Identity;
 
 public class EmailVerificationOtp : BaseEntity
-{
+{   
     public Guid UserId { get; set; }
     public ApplicationUser User { get; set; } = null!;
 

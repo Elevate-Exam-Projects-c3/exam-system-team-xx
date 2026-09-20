@@ -1,20 +1,19 @@
+﻿using exam_system.Domain.Common;
 using System.Linq.Expressions;
-using exam_system.Domain.Common;
 
 namespace exam_system.Persistence.DataAccess;
 
-public interface IGenericRepository<T> where T : BaseEntity
+public interface IGenericRepository<TEntity> where TEntity : BaseEntity
 {
-    Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes);
-    IQueryable<T> GetAll();
-    IQueryable<T> Get(Expression<Func<T, bool>> predicate);
-    Task AddAsync(T entity);
-    Task AddRangeAsync(IEnumerable<T> entities);
-    void Update(T entity);
-    Task UpdateAsync(T entity);
-    void Delete(T entity);
-    Task DeleteAsync(T entity);
-    void HardDelete(T entity);
-    void DeleteRange(IEnumerable<T> entities);
-    Task<int> CountAsync(Expression<Func<T, bool>>? criteria = null);
+    Task<TEntity?> GetByIdAsync(Guid id);
+    IQueryable<TEntity> GetAll();
+    IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
+    void Add(TEntity entity);
+    void AddRange(IEnumerable<TEntity> entities);
+    void Update(TEntity entity);
+    void Delete(TEntity entity);
+    void DeleteRange(IEnumerable<TEntity> entities);
+    Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null);
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null);
+    Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null);
 }

@@ -1,11 +1,11 @@
 using System.Reflection;
 using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using exam_system.Domain.Entities.Diplomas;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
+using exam_system;
+using exam_system.Features.Shared.Behaviors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +18,13 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+    cfg.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+    cfg.AddOpenBehavior(typeof(TransactionPipelineBehavior<,>));
 });
 
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
+
 
 var app = builder.Build();
 
@@ -55,29 +59,20 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 // Test Minimal API Endpoint to verify database access and generic repository
-app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma> diplomaRepo, CancellationToken ct) =>
-{
-    var diplomas = await diplomaRepo.GetAll()
-        .Select(d => new
-        {
-            d.Id,
-            d.Title,
-            d.Description,
-            QuizzesCount = d.Quizzes.Count,
-            EnrollmentsCount = d.Enrollments.Count,
-            d.CreatedAt
-        })
-        .ToListAsync(ct);
+//app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma,Guid> diplomaRepo, CancellationToken ct) =>
+//{
+//    var allDiplomasSpecification = new AllDiplomasSpecification();
+//    var diplomas = await diplomaRepo.ListAsync(allDiplomasSpecification,ct);
 
-    return Results.Ok(new
-    {
-        Success = true,
-        Count = diplomas.Count,
-        Data = diplomas
-    });
-})
-.WithName("GetTestDiplomas")
-.WithTags("Test");
+//    return Results.Ok(new
+//    {
+//        Success = true,
+//        diplomas.Count,
+//        Data = diplomas
+//    });
+//})
+//.WithName("GetTestDiplomas")
+//.WithTags("Test");
 
 app.MapControllers();
 

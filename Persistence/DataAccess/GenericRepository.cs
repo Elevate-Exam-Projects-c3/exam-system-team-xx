@@ -1,104 +1,51 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using exam_system.Domain.Common;
 using exam_system.Persistence.Context;
 
 namespace exam_system.Persistence.DataAccess;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
 {
     protected readonly AppDbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
 
     public GenericRepository(AppDbContext context)
     {
         _context = context;
-        _dbSet = _context.Set<T>();
+        _dbSet = _context.Set<TEntity>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includes)
-    {
-        IQueryable<T> query = _dbSet;
+    public async Task<TEntity?> GetByIdAsync(Guid id)
+        => await _dbSet.FindAsync(id);
 
-        foreach (var include in includes)
-        {
-            query = query.Include(include);
-        }
+    public IQueryable<TEntity> GetAll() 
+        => _dbSet;
 
-        return await query.FirstOrDefaultAsync(e => e.Id == id);
-    }
+    public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate) 
+        => _dbSet.Where(predicate);
 
-    public IQueryable<T> GetAll()
-    {
-        return _dbSet;
-    }
+    public void Add(TEntity entity)
+        => _dbSet.Add(entity);
 
-    public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
-    {
-        return _dbSet.Where(predicate);
-    }
+    public void AddRange(IEnumerable<TEntity> entities) 
+        => _dbSet.AddRange(entities);
 
-    public async Task AddAsync(T entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
+    public void Update(TEntity entity) 
+        => _dbSet.Update(entity);
 
-    public async Task AddRangeAsync(IEnumerable<T> entities)
-    {
-        await _dbSet.AddRangeAsync(entities);
-    }
+    public void Delete(TEntity entity) 
+        => _dbSet.Remove(entity);
 
-    public void Update(T entity)
-    {
-        _dbSet.Update(entity);
-    }
+    public void DeleteRange(IEnumerable<TEntity> entities) 
+        => _dbSet.RemoveRange(entities);
 
- 
-    // Soft Delete - marks as deleted but keeps in database
-    public void Delete(T entity)
-    {
-        _dbSet.Attach(entity);
-        entity.IsDeleted = true;
-        entity.DeletedAt = DateTime.UtcNow;
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.CountAsync(criteria) : await _dbSet.CountAsync();
 
-        // Mark the entity as modified so EF will update it
-        _context.Entry(entity).State = EntityState.Modified;
-    }
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.FirstOrDefaultAsync(criteria) : await _dbSet.FirstOrDefaultAsync();
 
-    // Hard Delete - physically removes from database
-    public void HardDelete(T entity)
-    {
-        _dbSet.Remove(entity);
-    }
-
-    public void DeleteRange(IEnumerable<T> entities)
-    {
-        foreach (var entity in entities)
-        {
-            Delete(entity); // Use soft delete for range as well
-        }
-    }
-
-    public async Task<int> CountAsync(Expression<Func<T, bool>>? criteria = null)
-    {
-        if (criteria == null)
-        {
-            return await _dbSet.CountAsync();
-        }
-
-        return await _dbSet.CountAsync(criteria);
-    }
-
-    public Task UpdateAsync(T entity)
-    {
-        _context.Entry(entity).State = EntityState.Modified;
-        return Task.CompletedTask;
-    }
-
-    public Task DeleteAsync(T entity)
-    {
-        Delete(entity); // Use soft delete
-        return Task.CompletedTask;
-    }
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null) 
+        => criteria is not null ? await _dbSet.AnyAsync(criteria) : await _dbSet.AnyAsync();
 }
