@@ -8,7 +8,6 @@ public sealed class AdminCreateQuizCommandValidator : AbstractValidator<AdminCre
     public AdminCreateQuizCommandValidator()
     {
         RuleFor(x => x.AdminCreateQuizRequest.Title)
-            .NotNull().WithMessage("Quiz must have a title.")
             .NotEmpty().WithMessage("Quiz title shall not be empty and must be from 3 to 200 characters.")
             .MinimumLength(3).WithMessage("Quiz title minimum length shall be 2 characters.")
             .MaximumLength(200).WithMessage("Quiz title maximum length shall be 200 characters.");
