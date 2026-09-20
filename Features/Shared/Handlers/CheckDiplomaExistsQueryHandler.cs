@@ -21,7 +21,7 @@ public sealed class CheckDiplomaExistsQueryHandler : IRequestHandler<CheckDiplom
         var diplomaExists = await _diplomaRepo.AnyAsync(d => d.Id == request.DiplomaId);
 
         if (!diplomaExists)
-            return Result.Failure(error: new ("Diploma.NotExist",$"Diploma of Id ({request.DiplomaId}) doesn't exist on the system.",ErrorType.NotFound));
+            return Result.Failure(error: Error.NotFound("Diploma.NotExist",$"Diploma of Id ({request.DiplomaId}) doesn't exist on the system."));
 
         return Result.Success();
     }

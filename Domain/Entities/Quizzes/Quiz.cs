@@ -10,7 +10,7 @@ public class Quiz : BaseEntity
     public Guid DiplomaId { get; set; }
     public Diploma Diploma { get; set; } = null!;
 
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; } = default!;
     public string? Instructions { get; set; }
     public int DurationMinutes { get; set; }
     public int PassScore { get; set; } = 60;
