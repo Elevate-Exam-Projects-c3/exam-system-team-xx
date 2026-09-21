@@ -17,9 +17,9 @@ public sealed class AdminCreateQuizController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse>> Create([FromBody] AdminCreateQuizRequest request)
+    public async Task<ActionResult<ApiResponse>> Create([FromBody] AdminCreateQuizRequest request, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new AdminCreateQuizOrchestrator(request));
+        var result = await _mediator.Send(new AdminCreateQuizOrchestrator(request), cancellationToken);
 
         if (result.IsFailure)
             return FromResult(result);

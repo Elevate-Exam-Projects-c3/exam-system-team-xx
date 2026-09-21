@@ -19,9 +19,11 @@ public class AdminUpdateQuizController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse>> Update([FromRoute] Guid id, [FromBody] AdminUpdateQuizRequest request)
+    public async Task<ActionResult<ApiResponse>> Update([FromRoute] Guid id, 
+        [FromBody] AdminUpdateQuizRequest request, 
+        CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new AdminUpdateQuizCommand(id,request));
+        var result = await _mediator.Send(new AdminUpdateQuizCommand(id,request),cancellationToken);
 
         if (result.IsFailure)
             return FromResult(result);
