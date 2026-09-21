@@ -34,6 +34,9 @@ public class Result
     /* Mehtods */
     public static Result Success()
         => new(true, Error.None);
+    public static Result Success(MediatR.Unit value)
+        => new(true, Error.None);
+
     public static Result Failure(Error error)
         => new(false, error);
     public static Result Failure(IEnumerable<Error> errors)
