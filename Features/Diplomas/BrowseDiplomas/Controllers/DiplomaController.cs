@@ -1,6 +1,8 @@
-﻿using exam_system.Features.Diplomas.BrowseDiplomas.DTOs;
+﻿using exam_system.Application.Common;
+using exam_system.Features.Diplomas.BrowseDiplomas.DTOs;
 using exam_system.Features.Diplomas.BrowseDiplomas.Queries;
 using exam_system.Features.Shared;
+using exam_system.Features.Shared.ResultPattern;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +10,10 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DiplomaController : ControllerBase
+    public class DiplomaController : BaseController
     {
-        private readonly IMediator _mediator;
-
-        public DiplomaController(IMediator mediator)
+        public DiplomaController(IMediator mediator) : base(mediator)
         {
-            _mediator = mediator;
         }
 
         /// <summary>
@@ -25,10 +24,20 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("GetDiplomas")]
-        public async Task<EndpointResponse<PaginatedResult<GetDiplomasDTO>>> GetDiplomas([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<ApiResponse<IReadOnlyList<GetDiplomasDTO>>>> GetDiplomas([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetDiplomasQuery(pageIndex, pageSize));
-            return EndpointResponse<PaginatedResult<GetDiplomasDTO>>.FromResult(result, "Diplomas retrieved successfully.");
+
+            if(result.Items.Count == 0)
+            {
+                return new ApiResponse<IReadOnlyList<GetDiplomasDTO>>();
+            }
+
+            return FromResultPaginated(
+                Result<PaginatedResult<GetDiplomasDTO>>.Success(result),
+                pageIndex,
+                pageSize,
+                "Diplomas retrieved successfully.");
         }
     }
 }
