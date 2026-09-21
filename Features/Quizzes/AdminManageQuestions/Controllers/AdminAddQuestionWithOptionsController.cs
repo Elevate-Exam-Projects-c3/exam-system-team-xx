@@ -21,11 +21,25 @@ public class AdminAddQuestionWithOptionsController : BaseController
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> Create([FromBody] AdminAddQuestionWithOptionsRequest request, CancellationToken cancellationToken =default)
     {
-        var result = await _mediator.Send(new AdminAddQuestionWithOptionsOrchestrator(request));
+        var result = await _mediator.Send(new AdminAddQuestionWithOptionsOrchestrator(request), cancellationToken);
 
         if (result.IsFailure)
             return FromResult(result);
 
         return FromResult(result, "Question is added successfully with its options under the quiz.", StatusCodes.Status201Created);
+    }
+
+    [HttpPost("{questionId:Guid}/options")]
+    [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse>> CreateOption([FromRoute] Guid questionId, [FromBody] AdminAddQuestionOptionRequest request, CancellationToken cancellationToken =default)
+    {
+        var result = await _mediator.Send(new AdminAddQuestionOptionOrchestrator(questionId, request),cancellationToken);
+
+        if (result.IsFailure)
+            return FromResult(result);
+
+        return FromResult(result, "Question option is added successfully under the question.", StatusCodes.Status201Created);
     }
 }

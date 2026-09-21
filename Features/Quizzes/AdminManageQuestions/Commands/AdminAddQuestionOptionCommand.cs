@@ -4,4 +4,5 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands;
 
-public sealed record AdminAddQuestionWithOptionsCommand(AdminAddQuestionWithOptionsRequest AdminAddQuestionWithOptionsRequest) : IRequest<Result>;
+public sealed record AdminAddQuestionOptionCommand(Guid QuestionId,
+    AdminAddQuestionOptionRequest AdminAddQuestionOptionRequest) : IRequest<Result>;

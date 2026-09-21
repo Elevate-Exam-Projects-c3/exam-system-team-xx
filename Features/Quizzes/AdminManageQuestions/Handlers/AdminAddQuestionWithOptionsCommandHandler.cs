@@ -22,21 +22,21 @@ public sealed class AdminAddQuestionWithOptionsCommandHandler : IRequestHandler<
         // Check whether the new question to be created has the same orderindex
         // as other existing question under the same quiz
         if (await _questionRepo.AnyAsync(
-            q => q.QuizId == request.AddQuestionWithOptionsRequest.QuizId &&
-            q.OrderIndex == request.AddQuestionWithOptionsRequest.OrderIndex))
+            q => q.QuizId == request.AdminAddQuestionWithOptionsRequest.QuizId &&
+            q.OrderIndex == request.AdminAddQuestionWithOptionsRequest.OrderIndex))
             return Result.Failure(Error.Validation("Question.ExistingOrderIndex", "Order index is already assigned to other existing question under the same quiz."));
 
         // Create new question with options
         var question = new Question()
         {
-            QuizId = request.AddQuestionWithOptionsRequest.QuizId,
-            Text = request.AddQuestionWithOptionsRequest.Text,
-            Explanation = request.AddQuestionWithOptionsRequest.Explanation,
-            OrderIndex = request.AddQuestionWithOptionsRequest.OrderIndex,
-            Options = request.AddQuestionWithOptionsRequest.Options.Select(option => 
+            QuizId = request.AdminAddQuestionWithOptionsRequest.QuizId,
+            Text = request.AdminAddQuestionWithOptionsRequest.Text,
+            Explanation = request.AdminAddQuestionWithOptionsRequest.Explanation,
+            OrderIndex = request.AdminAddQuestionWithOptionsRequest.OrderIndex,
+            Options = request.AdminAddQuestionWithOptionsRequest.Options.Select(option => 
                 new QuestionOption()
                 {
-                    QuestionId = request.AddQuestionWithOptionsRequest.QuizId,
+                    QuestionId = request.AdminAddQuestionWithOptionsRequest.QuizId,
                     OptionText = option.OptionText,
                     IsCorrect = option.IsCorrect,
                 }
