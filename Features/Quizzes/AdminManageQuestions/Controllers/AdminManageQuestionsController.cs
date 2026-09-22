@@ -85,4 +85,18 @@ public sealed class AdminManageQuestionsController : BaseController
 
         return FromResult(result, successCode: StatusCodes.Status204NoContent);
     }
+
+    [HttpDelete("{questionId:Guid}")]
+    [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse>> DeleteQuestion([FromRoute] Guid questionId, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send(new AdminDeleteQuestionOrchestrator(questionId), cancellationToken);
+
+        if (result.IsFailure)
+            return FromResult(result);
+
+        return FromResult(result, successMessage: "Question is deleted successfully !", successCode: StatusCodes.Status200OK);
+    }
 }
