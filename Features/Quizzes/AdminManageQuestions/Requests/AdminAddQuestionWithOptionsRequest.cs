@@ -3,7 +3,7 @@
 public sealed class AdminAddQuestionWithOptionsRequest
 {
     public Guid QuizId { get; set; }
-    public string Text { get; set; } = string.Empty;
+    public string Text { get; set; } = default!;
     public string? Explanation { get; set; }
     public int OrderIndex { get; set; }
     public ICollection<AdminAddQuestionOptionRequest> Options { get; set; } = [];

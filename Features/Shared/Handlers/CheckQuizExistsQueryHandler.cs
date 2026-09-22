@@ -18,10 +18,10 @@ public sealed class CheckQuizExistsQueryHandler : IRequestHandler<CheckQuizExist
     public async Task<Result> Handle(CheckQuizExistsQuery request, CancellationToken cancellationToken)
     {
         // Check if quiz whose Id is passed exists
-        var quizExists = await _quizRepo.AnyAsync(d => d.Id == request.QuizId);
+        var quizExists = await _quizRepo.AnyAsync(d => d.Id == request.QuizId, cancellationToken);
 
         if (!quizExists)
-            return Result.Failure(error: Error.NotFound("Quiz.NotExist", $"Quiz of Id ({request.QuizId}) doesn't exist on the system."));
+            return Result.Failure(error: Error.NotFound("Quiz.NotFound", $"Quiz of Id ({request.QuizId}) doesn't exist on the system."));
 
         return Result.Success();
     }

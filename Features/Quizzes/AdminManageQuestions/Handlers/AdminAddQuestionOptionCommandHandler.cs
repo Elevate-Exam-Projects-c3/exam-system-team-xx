@@ -36,7 +36,7 @@ public sealed class AdminAddQuestionOptionCommandHandler : IRequestHandler<Admin
         var newQuestionOption = new QuestionOption()
         {
             QuestionId = request.QuestionId,
-            OptionText = request.AdminAddQuestionOptionRequest.OptionText,
+            OptionText = request.AdminAddQuestionOptionRequest.OptionText.Trim(),
             IsCorrect = request.AdminAddQuestionOptionRequest.IsCorrect
         };
         _questionOptionRepo.Add(newQuestionOption);

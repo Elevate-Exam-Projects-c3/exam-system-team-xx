@@ -18,10 +18,10 @@ public sealed class CheckDiplomaExistsQueryHandler : IRequestHandler<CheckDiplom
     public async Task<Result> Handle(CheckDiplomaExistsQuery request, CancellationToken cancellationToken)
     {
         // Check if diploma whose Id is passed exists
-        var diplomaExists = await _diplomaRepo.AnyAsync(d => d.Id == request.DiplomaId);
+        var diplomaExists = await _diplomaRepo.AnyAsync(d => d.Id == request.DiplomaId, cancellationToken);
 
         if (!diplomaExists)
-            return Result.Failure(error: Error.NotFound("Diploma.NotExist",$"Diploma of Id ({request.DiplomaId}) doesn't exist on the system."));
+            return Result.Failure(error: Error.NotFound("Diploma.NotFound",$"Diploma of Id ({request.DiplomaId}) doesn't exist on the system."));
 
         return Result.Success();
     }
