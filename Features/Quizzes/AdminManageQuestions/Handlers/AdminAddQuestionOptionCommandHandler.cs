@@ -19,6 +19,19 @@ public sealed class AdminAddQuestionOptionCommandHandler : IRequestHandler<Admin
 
     public async Task<Result> Handle(AdminAddQuestionOptionCommand request, CancellationToken cancellationToken)
     {
+        // Check if new option is the new correct option
+        if(request.AdminAddQuestionOptionRequest.IsCorrect)
+        {
+            // Get the already existing correct option under that question
+            var oldCorrectOption = await _questionOptionRepo.FirstOrDefaultAsync(option => option.IsCorrect == true && option.QuestionId == request.QuestionId);
+
+            // Toggle the correctness of this option to be incorrect
+            oldCorrectOption!.IsCorrect = false;
+
+            // Update that option
+            _questionOptionRepo.Update(oldCorrectOption);
+        }
+
         // Create new question option under a specific question
         var newQuestionOption = new QuestionOption()
         {

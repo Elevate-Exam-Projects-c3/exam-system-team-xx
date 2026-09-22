@@ -9,8 +9,5 @@ public sealed class AdminAddQuestionOptionCommandValidator : AbstractValidator<A
     {
         RuleFor(x => x.AdminAddQuestionOptionRequest.OptionText)
             .NotEmpty().WithMessage("A question option must have an option text.");
-
-        RuleFor(x => x.AdminAddQuestionOptionRequest.IsCorrect)
-            .Equal(false).WithMessage("Question already has a correct option.");
     }
 }
