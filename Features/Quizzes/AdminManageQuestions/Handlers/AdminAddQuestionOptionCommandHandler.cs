@@ -23,7 +23,7 @@ public sealed class AdminAddQuestionOptionCommandHandler : IRequestHandler<Admin
         if(request.AdminAddQuestionOptionRequest.IsCorrect)
         {
             // Get the already existing correct option under that question
-            var oldCorrectOption = await _questionOptionRepo.FirstOrDefaultAsync(option => option.IsCorrect == true && option.QuestionId == request.QuestionId);
+            var oldCorrectOption = await _questionOptionRepo.FirstOrDefaultAsync(option => option.IsCorrect == true && option.QuestionId == request.QuestionId, cancellationToken);
 
             // Toggle the correctness of this option to be incorrect
             oldCorrectOption!.IsCorrect = false;

@@ -57,4 +57,32 @@ public sealed class AdminManageQuestionsController : BaseController
 
         return FromResult(result, successCode: StatusCodes.Status204NoContent);
     }
+
+    [HttpPut("{questionId:Guid}/options/{optionId:Guid}")]
+    [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse>> UpdateQuestionOption([FromRoute] Guid questionId, [FromRoute] Guid optionId, [FromBody] string updatedOptionText, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send(new AdminUpdateQuestionOptionOrchestrator(questionId, optionId, updatedOptionText), cancellationToken);
+
+        if (result.IsFailure)
+            return FromResult(result);
+
+        return FromResult(result, successCode: StatusCodes.Status204NoContent);
+    }
+
+    [HttpPut("{questionId:Guid}/options/{optionId:Guid}/correct-option")]
+    [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse>> SetCorrectQuestionOption([FromRoute] Guid questionId, [FromRoute] Guid optionId, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send(new AdminSetCorrectQuestionOptionOrchestrator(questionId, optionId), cancellationToken);
+
+        if (result.IsFailure)
+            return FromResult(result);
+
+        return FromResult(result, successCode: StatusCodes.Status204NoContent);
+    }
 }
