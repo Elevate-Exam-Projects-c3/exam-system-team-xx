@@ -1,9 +1,10 @@
-using System.Reflection;
-using FluentValidation;
+using exam_system.Common.Middleware;
+using exam_system.Features.Shared.Behaviors;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
-using exam_system.Features.Shared.Behaviors;
+using FluentValidation;
 using Mapster;
+using System.Reflection;
 
 public partial class Program
 {
@@ -25,12 +26,28 @@ public partial class Program
             cfg.AddOpenBehavior(typeof(TransactionPipelineBehavior<,>));
         });
 
+        // Add ProblemDetails to DI container, in addition to, configuring ProblemDetailsOptions
+        // to add RequestTraceId to returned ProblemDetails object in the response
+        builder.Services.AddProblemDetails(options
+            => options.CustomizeProblemDetails = 
+            problemDetailsContext => problemDetailsContext.ProblemDetails.Extensions
+            .TryAdd("requestId", problemDetailsContext.HttpContext.TraceIdentifier));
+
+        // Add GlobalExceptionHandlerMiddleware to DI container
+        builder.Services.AddExceptionHandler<GlobalExceptionHandlerMiddleware>();
+
+        // Add Mapster to DI containers
         builder.Services.AddMapster();
         TypeAdapterConfig.GlobalSettings.Scan(typeof(Program).Assembly);
 
+        // Add all validators defined in this assembly
         builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
+        // Build the app
         var app = builder.Build();
+
+        // Use the custom GlobalExceptionHandlerMiddleware
+        app.UseExceptionHandler();
 
         // Seed Database automatically on startup
         using (var scope = app.Services.CreateScope())
