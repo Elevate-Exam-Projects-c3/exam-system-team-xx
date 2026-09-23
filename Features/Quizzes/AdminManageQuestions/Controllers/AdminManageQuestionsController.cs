@@ -19,6 +19,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> CreateQuestionWithOptions([FromBody] AdminAddQuestionWithOptionsRequest request, CancellationToken cancellationToken = default)
     {
@@ -33,6 +34,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpPost("{questionId:Guid}/options")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> CreateOptionOnQuestion([FromRoute] Guid questionId, [FromBody] AdminAddQuestionOptionRequest request, CancellationToken cancellationToken = default)
     {
@@ -47,6 +49,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpPut("{questionId:Guid}")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> UpdateQuestion([FromRoute] Guid questionId, [FromBody] AdminUpdateQuestionRequest request, CancellationToken cancellationToken = default)
     {
@@ -61,6 +64,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpPut("{questionId:Guid}/options/{optionId:Guid}")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> UpdateQuestionOption([FromRoute] Guid questionId, [FromRoute] Guid optionId, [FromBody] string updatedOptionText, CancellationToken cancellationToken = default)
     {
@@ -75,6 +79,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpPut("{questionId:Guid}/options/{optionId:Guid}/correct-option")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> SetCorrectQuestionOption([FromRoute] Guid questionId, [FromRoute] Guid optionId, CancellationToken cancellationToken = default)
     {

@@ -16,6 +16,7 @@ public sealed class AdminCreateQuizController : BaseController
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> Create([FromBody] AdminCreateQuizRequest request, CancellationToken cancellationToken)
     {
