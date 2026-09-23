@@ -1,5 +1,4 @@
-﻿using E_Commerce.Application.Common;
-using exam_system.Features.Shared.ResultPattern;
+﻿using exam_system.Features.Shared.ResultPattern;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +19,8 @@ public abstract class BaseController : ControllerBase
         {
             StatusCodes.Status200OK => Ok(ApiResponse.Ok(successMessage, HttpContext.TraceIdentifier)),
             StatusCodes.Status201Created => Created(default(string),ApiResponse.Ok(successMessage, HttpContext.TraceIdentifier)),
+            StatusCodes.Status202Accepted => Accepted(default(string),ApiResponse.Ok(successMessage, HttpContext.TraceIdentifier)),
+            StatusCodes.Status204NoContent => NoContent(),
             _ => Ok(ApiResponse.Ok(successMessage, HttpContext.TraceIdentifier)),
         };
 
@@ -88,6 +89,8 @@ public abstract class BaseController : ControllerBase
         {
             StatusCodes.Status200OK => StatusCodes.Status200OK,
             StatusCodes.Status201Created => StatusCodes.Status201Created,
+            StatusCodes.Status202Accepted => StatusCodes.Status202Accepted,
+            StatusCodes.Status204NoContent => StatusCodes.Status204NoContent,
             _ => StatusCodes.Status200OK
         };
 

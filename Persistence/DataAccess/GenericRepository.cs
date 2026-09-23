@@ -16,8 +16,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         _dbSet = _context.Set<TEntity>();
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id)
-        => await _dbSet.FindAsync(id);
+    public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => await _dbSet.FindAsync(id, cancellationToken);
 
     public IQueryable<TEntity> GetAll() 
         => _dbSet;
@@ -40,12 +40,12 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     public void DeleteRange(IEnumerable<TEntity> entities) 
         => _dbSet.RemoveRange(entities);
 
-    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null) 
-        => criteria is not null ? await _dbSet.CountAsync(criteria) : await _dbSet.CountAsync();
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default) 
+        => criteria is not null ? await _dbSet.CountAsync(criteria, cancellationToken) : await _dbSet.CountAsync(cancellationToken);
 
-    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null) 
-        => criteria is not null ? await _dbSet.FirstOrDefaultAsync(criteria) : await _dbSet.FirstOrDefaultAsync();
+    public async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default) 
+        => criteria is not null ? await _dbSet.FirstOrDefaultAsync(criteria, cancellationToken) : await _dbSet.FirstOrDefaultAsync(cancellationToken);
 
-    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null) 
-        => criteria is not null ? await _dbSet.AnyAsync(criteria) : await _dbSet.AnyAsync();
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default) 
+        => criteria is not null ? await _dbSet.AnyAsync(criteria, cancellationToken) : await _dbSet.AnyAsync(cancellationToken);
 }
