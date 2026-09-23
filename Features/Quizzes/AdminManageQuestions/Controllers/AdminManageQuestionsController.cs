@@ -94,6 +94,7 @@ public sealed class AdminManageQuestionsController : BaseController
     [HttpDelete("{questionId:Guid}")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ApiResponse>> DeleteQuestion([FromRoute] Guid questionId, CancellationToken cancellationToken = default)
     {
