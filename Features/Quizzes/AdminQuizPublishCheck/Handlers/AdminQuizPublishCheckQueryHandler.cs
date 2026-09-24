@@ -78,7 +78,7 @@ public sealed class AdminQuizPublishCheckQueryHandler : IRequestHandler<AdminQui
         {
             Name = "Every question must have exactly one correct option marked.",
             Success = EveryQuestionHasCorrectOption,
-            ErrorMessage = EveryQuestionHasCorrectOption ? null : "One or more question(s) don't ave exactly one correct option marked."
+            ErrorMessage = EveryQuestionHasCorrectOption ? null : "One or more question(s) don't have exactly one correct option marked."
         });
 
         return Result<IReadOnlyList<ChecklistItemResponse>>.Success(ckecklist);
