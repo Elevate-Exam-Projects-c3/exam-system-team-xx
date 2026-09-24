@@ -5,7 +5,7 @@ namespace exam_system.Persistence.DataAccess;
 
 public interface IGenericRepository<TEntity> where TEntity : BaseEntity
 {
-    Task<TEntity?> GetByIdAsync(Guid id);
+    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     IQueryable<TEntity> GetAll();
     IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
     void Add(TEntity entity);
@@ -13,7 +13,7 @@ public interface IGenericRepository<TEntity> where TEntity : BaseEntity
     void Update(TEntity entity);
     void Delete(TEntity entity);
     void DeleteRange(IEnumerable<TEntity> entities);
-    Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null);
-    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null);
-    Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null);
+    Task<int> CountAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default);
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default);
+    Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? criteria = null, CancellationToken cancellationToken = default);
 }

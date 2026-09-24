@@ -1,5 +1,4 @@
-﻿using E_Commerce.Application.Common;
-using exam_system.Features.Shared.ResultPattern;
+﻿using exam_system.Features.Shared.ResultPattern;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
