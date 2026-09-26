@@ -20,7 +20,7 @@ public sealed class AdminPublishQuizController : BaseController
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse>> SetCorrectQuestionOption([FromRoute] Guid quizId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<ApiResponse>> Publish([FromRoute] Guid quizId, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send(new AdminPublishQuizOrhestrator(quizId), cancellationToken);
 
