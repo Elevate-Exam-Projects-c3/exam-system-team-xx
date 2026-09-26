@@ -3,4 +3,4 @@ using MediatR;
 
 namespace exam_system.Features.Shared.Queries;
 
-public sealed record CheckDiplomaExistsQuery(Guid DiplomaId) : IRequest<Result>;
+public sealed record CheckQuizExistsQuery(Guid QuizId) : IRequest<Result>;
