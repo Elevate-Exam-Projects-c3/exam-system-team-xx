@@ -42,7 +42,7 @@ public sealed class AdminQuizPublishCheckQueryHandler : IRequestHandler<AdminQui
         ckecklist.Add(new ChecklistItemResponse()
         {
             Name = "Quiz must have at least one question.",
-            Success = checklistQuery.QuizHasAtLeastOneQuestion,
+            Passed = checklistQuery.QuizHasAtLeastOneQuestion,
             ErrorMessage = checklistQuery.QuizHasAtLeastOneQuestion ? null : "Quiz doesn't have questions yet."
         });
 
@@ -50,7 +50,7 @@ public sealed class AdminQuizPublishCheckQueryHandler : IRequestHandler<AdminQui
         ckecklist.Add(new ChecklistItemResponse()
         {
             Name = "Quiz pass score must be within 0-100.",
-            Success = checklistQuery.QuestionPassScoreWithinValidRange,
+            Passed = checklistQuery.QuestionPassScoreWithinValidRange,
             ErrorMessage = checklistQuery.QuestionPassScoreWithinValidRange ? null : "Quiz pass score is not within the valid range."
         });
             
@@ -58,8 +58,8 @@ public sealed class AdminQuizPublishCheckQueryHandler : IRequestHandler<AdminQui
         ckecklist.Add(new ChecklistItemResponse()
         {
             Name = "Quiz duration minutes value must be valid (Postive Number).",
-            Success = checklistQuery.QuestionDurationMinutesValid,
-            ErrorMessage = checklistQuery.QuestionDurationMinutesValid ? null : "Quiz duration minutes valid is invalid."
+            Passed = checklistQuery.QuestionDurationMinutesValid,
+            ErrorMessage = checklistQuery.QuestionDurationMinutesValid ? null : "Quiz duration minutes value is invalid."
         });
 
         // Check that every question has exactly one correct option marked
@@ -77,7 +77,7 @@ public sealed class AdminQuizPublishCheckQueryHandler : IRequestHandler<AdminQui
         ckecklist.Add(new ChecklistItemResponse()
         {
             Name = "Every question must have exactly one correct option marked.",
-            Success = EveryQuestionHasCorrectOption,
+            Passed = EveryQuestionHasCorrectOption,
             ErrorMessage = EveryQuestionHasCorrectOption ? null : "One or more question(s) don't have exactly one correct option marked."
         });
 

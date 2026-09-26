@@ -76,7 +76,7 @@ public sealed class AdminManageQuestionsController : BaseController
         return FromResult(result, successCode: StatusCodes.Status204NoContent);
     }
 
-    [HttpPut("{questionId:Guid}/options/{optionId:Guid}/correct-option")]
+    [HttpPatch("{questionId:Guid}/options/{optionId:Guid}/correct-option")]
     [ProducesResponseType(typeof(ApiResponse),StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails),StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
