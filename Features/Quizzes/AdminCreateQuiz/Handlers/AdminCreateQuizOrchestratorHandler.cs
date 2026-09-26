@@ -19,7 +19,7 @@ public sealed class AdminCreateQuizOrchestratorHandler : IRequestHandler<AdminCr
     public async Task<Result> Handle(AdminCreateQuizOrchestrator request, CancellationToken cancellationToken)
     {
         // step 1: Check if passed diploma already exists
-        var diplomaExistsResult = await _mediator.Send(new CheckDiplomaExistsQuery(request.AdminCreateQuizRequest.DiplomaId));
+        var diplomaExistsResult = await _mediator.Send(new CheckDiplomaExistsQuery(request.AdminCreateQuizRequest.DiplomaId),cancellationToken);
         if (diplomaExistsResult.IsFailure)
             return diplomaExistsResult;
 
