@@ -1,4 +1,4 @@
-﻿using exam_system.Shared;
+﻿using exam_system.Features.Shared.ResultPattern;
 using MediatR;
 
 namespace exam_system.Abstractions.Messaging

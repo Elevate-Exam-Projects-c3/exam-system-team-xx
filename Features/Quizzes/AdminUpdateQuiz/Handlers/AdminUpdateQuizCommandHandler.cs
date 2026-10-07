@@ -30,7 +30,7 @@ public sealed class AdminUpdateQuizCommandHandler : IRequestHandler<AdminUpdateQ
             return Result.Failure(error: Error.NotFound("Quiz.NotFound", $"Quiz of Id ({request.QuizId}) doesn't exist on the system."));
 
         // Update the quiz
-        quizToBeUpdated = _mapper.Map(request.AdminUpdateQuizRequest,quizToBeUpdated);
+        quizToBeUpdated = _mapper.Map(request.AdminUpdateQuizRequest, quizToBeUpdated);
         _quizRepo.Update(quizToBeUpdated);
 
         // Save changes to DB

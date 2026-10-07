@@ -1,9 +1,11 @@
-using System.Reflection;
-using FluentValidation;
+using exam_system.Domain.Entities.Identity;
+using exam_system.Features.Shared.Behaviors;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
-using exam_system.Features.Shared.Behaviors;
+using FluentValidation;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 public partial class Program
 {
@@ -32,21 +34,26 @@ public partial class Program
 
         var app = builder.Build();
 
-        // Seed Database automatically on startup
+        // Seed Identity data then 
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
             var logger = services.GetRequiredService<ILogger<Program>>();
             try
             {
-                var context = services.GetRequiredService<AppDbContext>();
-                await AppDbContextSeed.SeedAsync(context, logger);
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+                await new IdentityDbContextSeed().SaveAsync(userManager, roleManager);
+
+                //var context = services.GetRequiredService<AppDbContext>();
+                //await AppDbContextSeed.SeedAsync(context, logger);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred during database migration/seeding.");
             }
         }
+
 
         // Enable Swagger UI in Development
         if (app.Environment.IsDevelopment())

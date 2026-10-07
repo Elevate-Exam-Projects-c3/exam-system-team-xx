@@ -1,9 +1,9 @@
+using exam_system.Domain.Entities.Attempts;
+using exam_system.Domain.Entities.Diplomas;
+using exam_system.Domain.Entities.Identity;
+using exam_system.Domain.Entities.Quizzes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using exam_system.Domain.Entities.Identity;
-using exam_system.Domain.Entities.Diplomas;
-using exam_system.Domain.Entities.Quizzes;
-using exam_system.Domain.Entities.Attempts;
 
 namespace exam_system.Persistence.Configurations;
 

@@ -4,8 +4,6 @@ using exam_system.Domain.Entities.Diplomas;
 using exam_system.Domain.Entities.Identity;
 using exam_system.Domain.Entities.Quizzes;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Reflection;
 
 namespace exam_system.Persistence.Context;
 
@@ -38,7 +36,8 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly,
+            type => type.Namespace == "exam_system.Persistence.Configurations");
 
         // Global Query Filter for Soft Delete
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
