@@ -26,6 +26,10 @@ public sealed class AdminPublishQuizCommandHandler : IRequestHandler<AdminPublis
         // Check if the returned quiz is null
         if(quizToBePublished is null)
             return Result.Failure(error: Error.NotFound("Quiz.NotFound", $"Quiz of Id ({request.QuizId}) doesn't exist on the system."));
+
+        // Check if the quiz is already published
+        if(quizToBePublished.Status is QuizStatus.Published)
+            return Result.Failure(error: Error.Conflict("Quiz.AlreadyPublished", $"Quiz of Id ({request.QuizId}) is already published on the system."));
         
         // Set quiz status to Published
         quizToBePublished.Status = QuizStatus.Published;
