@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers;
 
 [Route("api/admin/quizzes")]
-public class AdminUpdateQuizController : BaseController
+public sealed class AdminUpdateQuizController : BaseController
 {
     public AdminUpdateQuizController(IMediator mediator)
         :base(mediator)
@@ -18,10 +18,13 @@ public class AdminUpdateQuizController : BaseController
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse>> Update([FromRoute] Guid id, [FromBody] AdminUpdateQuizRequest request)
+    public async Task<ActionResult<ApiResponse>> Update([FromRoute] Guid id, 
+        [FromBody] AdminUpdateQuizRequest request, 
+        CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new AdminUpdateQuizCommand(id,request));
+        var result = await _mediator.Send(new AdminUpdateQuizCommand(id,request),cancellationToken);
 
         if (result.IsFailure)
             return FromResult(result);

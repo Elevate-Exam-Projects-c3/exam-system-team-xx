@@ -6,9 +6,9 @@ namespace exam_system.Domain.Entities.Quizzes;
 public class Question : BaseEntity
 {
     public Guid QuizId { get; set; }
-    public Quiz Quiz { get; set; } = null!;
+    public Quiz Quiz { get; set; } = default!;
 
-    public string Text { get; set; } = string.Empty;
+    public string Text { get; set; } = default!;
     public string? Explanation { get; set; }
     public int OrderIndex { get; set; }
 

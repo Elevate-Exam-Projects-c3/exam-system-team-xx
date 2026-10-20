@@ -8,7 +8,7 @@ public class QuestionOption : BaseEntity
     public Guid QuestionId { get; set; }
     public Question Question { get; set; } = null!;
 
-    public string OptionText { get; set; } = string.Empty;
+    public string OptionText { get; set; } = default!;
     public bool IsCorrect { get; set; } = false;
 
     public ICollection<StudentQuestionAnswer> SelectedInAnswers { get; set; } = new List<StudentQuestionAnswer>();
