@@ -1,9 +1,9 @@
-﻿using exam_system.Shared;
-using MediatR;
+﻿//using exam_system.Shared;
+//using MediatR;
 
-namespace exam_system.Abstractions.Messaging
-{
-    public interface IQuery<TResponse> : IRequest<Result<TResponse>>
-    {
-    }
-}
+//namespace exam_system.Abstractions.Messaging
+//{
+//    public interface IQuery<TResponse> : IRequest<Result<TResponse>>
+//    {
+//    }
+//}
